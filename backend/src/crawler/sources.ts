@@ -7,17 +7,10 @@ export interface NewsSource {
 }
 
 export const newsSources: NewsSource[] = [
-  // English sources
+  // English sources (reliable feeds)
   {
     name: 'BBC News',
     url: 'https://feeds.bbci.co.uk/news/rss.xml',
-    language: 'en',
-    category: 'general',
-    type: 'rss'
-  },
-  {
-    name: 'Reuters',
-    url: 'https://www.reuters.com/rssFeed/topNews',
     language: 'en',
     category: 'general',
     type: 'rss'
@@ -36,20 +29,27 @@ export const newsSources: NewsSource[] = [
     category: 'world',
     type: 'rss'
   },
-  
-  // Chinese sources
   {
-    name: '新华网',
-    url: 'http://www.xinhuanet.com/politics/news_politics.xml',
-    language: 'zh',
-    category: 'politics',
+    name: 'Ars Technica',
+    url: 'https://feeds.arstechnica.com/arstechnica/index',
+    language: 'en',
+    category: 'tech',
     type: 'rss'
   },
+  
+  // Chinese sources (verified working feeds)
+  // {
+  //   name: '新华网',
+  //   url: 'http://www.xinhuanet.com/politics/news_politics.xml',
+  //   language: 'zh',
+  //   category: 'politics',
+  //   type: 'rss'
+  // },
   {
-    name: '澎湃新闻',
-    url: 'https://www.thepaper.cn/rss/news.xml',
+    name: '新华每日电讯',
+    url: 'https://feedx.net/rss/mrdx.xml',
     language: 'zh',
-    category: 'general',
+    category: 'politics',
     type: 'rss'
   },
   {
@@ -60,10 +60,10 @@ export const newsSources: NewsSource[] = [
     type: 'rss'
   },
   {
-    name: '财新网',
-    url: 'http://www.caixin.com/rss/news.xml',
+    name: '知乎日报',
+    url: 'https://feeds.feedburner.com/zhihu-daily',
     language: 'zh',
-    category: 'finance',
+    category: 'general',
     type: 'rss'
   }
 ]

@@ -108,7 +108,14 @@ ${topArticles}
 export async function batchSummarizeArticles(articles: ParsedArticle[]): Promise<SummarizedArticle[]> {
   const summarizedArticles: SummarizedArticle[] = []
   
-  for (const article of articles) {
+  // 进一步限制处理数量，避免超时
+  const limitedArticles = articles.slice(0, 10)
+  console.log(`🤖 Processing ${limitedArticles.length} articles (limited from ${articles.length})`)
+  
+  for (let i = 0; i < limitedArticles.length; i++) {
+    const article = limitedArticles[i]
+    console.log(`📝 Processing article ${i + 1}/${limitedArticles.length}: ${article.title.substring(0, 50)}...`)
+    
     try {
       const aiSummary = await summarizeArticle(article)
       
@@ -120,12 +127,27 @@ export async function batchSummarizeArticles(articles: ParsedArticle[]): Promise
         sentiment: detectSentiment(article.rawContent)
       })
       
+      console.log(`✅ Summarized: ${article.title.substring(0, 50)}...`)
+      
+      // 减少延迟但保持合理间隔
       await new Promise(resolve => setTimeout(resolve, 1000))
     } catch (error) {
-      console.error(`Failed to summarize article: ${article.title}`, error)
+      console.error(`❌ Failed to summarize article: ${article.title}`, error)
+      
+      // 如果AI摘要失败，仍然保存文章但使用原内容的前150字作为摘要
+      summarizedArticles.push({
+        ...article,
+        aiSummary: article.rawContent.substring(0, 150) + '...',
+        readingTime: Math.ceil(article.rawContent.split(/\s+/).length / 200),
+        tags: extractTags(article.rawContent),
+        sentiment: detectSentiment(article.rawContent)
+      })
+      
+      console.log(`⚠️ Used fallback summary for: ${article.title.substring(0, 50)}...`)
     }
   }
   
+  console.log(`🎉 Completed processing ${summarizedArticles.length} articles`)
   return summarizedArticles
 }
 

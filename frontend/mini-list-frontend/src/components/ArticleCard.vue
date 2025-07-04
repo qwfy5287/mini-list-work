@@ -1,6 +1,9 @@
 <template>
   <article class="article-card">
     <div class="article-meta">
+      <span class="language-tag" :class="props.article.language">
+        {{ props.article.language === 'zh' ? '中文' : 'EN' }}
+      </span>
       <span class="category">{{ props.article.category }}</span>
       <span class="reading-time">{{ props.article.readingTime }}min read</span>
       <span class="published-time">{{ formatTime(props.article.publishedAt) }}</span>
@@ -12,14 +15,26 @@
     
     <div class="article-footer">
       <span class="source">{{ props.article.sourceName }}</span>
-      <a :href="props.article.originalUrl" target="_blank" rel="noopener" class="read-more">
-        阅读原文 →
-      </a>
+      <div class="article-actions">
+        <DeleteButton 
+          v-if="isAdminMode"
+          :article-id="props.article.id"
+          :article-title="props.article.title"
+          @deleted="handleDeleted"
+          @error="handleDeleteError"
+        />
+        <a :href="props.article.originalUrl" target="_blank" rel="noopener" class="read-more">
+          阅读原文 →
+        </a>
+      </div>
     </div>
   </article>
 </template>
 
 <script setup lang="ts">
+import DeleteButton from './DeleteButton.vue'
+import { useAdmin } from '../composables/useAdmin'
+
 interface Article {
   id: number
   title: string
@@ -36,7 +51,25 @@ interface Props {
   article: Article
 }
 
+interface Emits {
+  (e: 'deleted', articleId: number): void
+  (e: 'error', message: string): void
+}
+
 const props = defineProps<Props>()
+const emit = defineEmits<Emits>()
+
+const { isAdminMode, addAdminLog } = useAdmin()
+
+function handleDeleted(articleId: number) {
+  addAdminLog(`删除文章: ${props.article.title}`)
+  emit('deleted', articleId)
+}
+
+function handleDeleteError(message: string) {
+  addAdminLog(`删除失败: ${message}`)
+  emit('error', message)
+}
 
 function formatTime(dateString: string): string {
   const date = new Date(dateString)
@@ -82,6 +115,23 @@ function formatTime(dateString: string): string {
   color: #666;
 }
 
+.language-tag {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.language-tag.zh {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.language-tag.en {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
 .category {
   background: #f0f0f0;
   padding: 0.25rem 0.5rem;
@@ -120,6 +170,12 @@ function formatTime(dateString: string): string {
   font-weight: 500;
 }
 
+.article-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .read-more {
   color: #007bff;
   text-decoration: none;
@@ -148,6 +204,10 @@ function formatTime(dateString: string): string {
   .article-footer {
     flex-direction: column;
     align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .article-actions {
     gap: 0.5rem;
   }
 }

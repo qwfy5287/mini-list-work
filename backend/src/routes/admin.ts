@@ -5,6 +5,7 @@ import { crawlAllSources } from '../crawler/rss-parser'
 import { batchSummarizeArticles, generateDailySummary } from '../ai/summarizer'
 import { newsSources } from '../crawler/sources'
 import { extractReadingTime, extractTags, detectSentiment } from '../crawler/content-extractor'
+import { eq } from 'drizzle-orm'
 
 export const adminRoutes = new Elysia({ prefix: '/api/admin' })
   .post('/crawl', async () => {
@@ -55,15 +56,7 @@ export const adminRoutes = new Elysia({ prefix: '/api/admin' })
           topCategories: JSON.stringify([...new Set(summarizedArticles.map(a => a.category))]),
           totalArticles: summarizedArticles.length
         })
-        .onConflictDoUpdate({
-          target: [dailyDigests.date],
-          set: {
-            overallSummary: dailySummary,
-            topCategories: JSON.stringify([...new Set(summarizedArticles.map(a => a.category))]),
-            totalArticles: summarizedArticles.length,
-            updatedAt: new Date()
-          }
-        })
+        .onConflictDoNothing()
       
       return {
         success: true,

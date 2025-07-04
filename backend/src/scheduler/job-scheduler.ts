@@ -169,15 +169,7 @@ export class NewsScheduler {
           topCategories: JSON.stringify([...new Set(summarizedArticles.map(a => a.category))]),
           totalArticles: summarizedArticles.length
         })
-        .onConflictDoUpdate({
-          target: [dailyDigests.date],
-          set: {
-            overallSummary: dailySummary,
-            topCategories: JSON.stringify([...new Set(summarizedArticles.map(a => a.category))]),
-            totalArticles: summarizedArticles.length,
-            updatedAt: new Date()
-          }
-        })
+        .onConflictDoNothing()
     } catch (error) {
       console.error('❌ Failed to save daily digest:', error)
     }
