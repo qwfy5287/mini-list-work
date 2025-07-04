@@ -1,0 +1,22 @@
+{
+  "name": "mini-list",
+  "version": "1.0.0",
+  "description": "Minimalist news aggregation app with AI summaries",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"bun run dev:backend\" \"bun run dev:frontend\"",
+    "dev:frontend": "cd frontend/mini-list-frontend && bun run dev",
+    "dev:backend": "cd backend && bun run dev",
+    "build": "bun run build:backend && bun run build:frontend",
+    "build:frontend": "cd frontend/mini-list-frontend && bun run build",
+    "build:backend": "cd backend && bun run build",
+    "start": "cd backend && bun run start"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

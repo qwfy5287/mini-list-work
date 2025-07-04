@@ -1,0 +1,32 @@
+{
+  "name": "mini-list-backend",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun run --hot index.ts",
+    "start": "bun run index.ts",
+    "build": "bun build index.ts --outdir ./dist"
+  },
+  "dependencies": {
+    "@elysiajs/cors": "^1.3.3",
+    "@elysiajs/swagger": "^1.3.1",
+    "@types/pg": "^8.15.4",
+    "cheerio": "^1.1.0",
+    "drizzle-kit": "^0.31.4",
+    "drizzle-orm": "^0.44.2",
+    "elysia": "^1.3.5",
+    "feedparser": "^2.2.10",
+    "node-schedule": "^2.1.1",
+    "openai": "^5.8.2",
+    "pg": "^8.16.3",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
