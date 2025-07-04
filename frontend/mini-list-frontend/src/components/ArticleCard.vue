@@ -156,6 +156,7 @@ function formatTime(dateString: string): string {
   color: #555;
   line-height: 1.6;
   margin: 0 0 1rem 0;
+  word-break: break-all;
 }
 
 .article-footer {
